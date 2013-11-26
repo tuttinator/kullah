@@ -3,6 +3,7 @@ package controllers
 import play.api._
 import play.api.mvc._
 import play.api.libs.json._
+import models.Colour
 
 object Application extends Controller {
 
@@ -12,22 +13,7 @@ object Application extends Controller {
 
 
   def colours = Action {
-    Ok(
-      Json.obj(
-        "users" -> Json.arr(
-          Json.obj(
-            "name" -> "Bob",
-            "age" -> 31,
-            "email" -> "bob@gmail.com"
-          ),
-          Json.obj(
-            "name" -> "Kiki",
-            "age" -> 25,
-            "email" -> JsNull
-          )
-        )
-      )
-    )
+    Ok(Json.toJson(Colour.all))
   }
 
   def colour(id: Long) = Action {
