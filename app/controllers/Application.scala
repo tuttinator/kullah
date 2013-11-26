@@ -13,12 +13,25 @@ object Application extends Controller {
 
 
   def colours = Action {
-    Ok(Json.toJson(Colour.all))
+    Ok(Json.toJson(Colour.all.map( implicit c =>
+          Json.obj(
+          "id" -> Json.toJson(c.id),
+          "name" -> Json.toJson(c.name),
+          "hex" -> Json.toJson(c.hex)
+          )
+        )
+      )
+    )
   }
 
-  def colour(id: Long) = Action {
-    Ok(views.html.index("yo"))
+  def colour(hex: String) = Action {
+    val colour = Colour.findByHex(hex)
+    Ok(Json.obj(
+      "id" -> Json.toJson(colour.id),
+      "name" -> Json.toJson(colour.name),
+      "hex" -> Json.toJson(colour.hex)
+      )
+    )
   }
 
 }
-
