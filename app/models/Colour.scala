@@ -11,27 +11,30 @@ object Colour {
 
   val colour = {
     get[Long]("id") ~ 
-    get[String]("name") map {
-      case id~name => Colour(id, name)
-    }
+    get[String]("name") ~
     get[String]("hex") map {
-      case id~hex => Colour(id, hex)
+      case id~name~hex => Colour(id, name, hex)
     }
+    
   }
 
   def all(): List[Colour] = DB.withConnection { implicit c =>
     SQL("select * from colour").as(colour *)
   }
-  
-  def find_by_id(id: Long) {
-    SQL("select * from colour where id = {id} limit 1").as(colour *)
+
+  def findById(id: Long): Option[Colour] = {
+    DB.withConnection { implicit connection =>
+      SQL("select * from colour where id = {id}").on(
+        'id -> id
+      ).as(colour *)
+    }
   }
 
-  def find_by_name(name: String) {
+  def findByName(name: String) {
     SQL("select * from colour where name = {name} limit 1").as(colour *)
   }
 
-  def find_by_hex(hex: String) {
+  def findByHex(hex: String) {
     SQL("select * from colour where hex = {hex} limit 1").as(colour *)
   }
 
